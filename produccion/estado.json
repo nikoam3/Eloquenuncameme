@@ -1,0 +1,15 @@
+{
+    "buy": false,
+    "compras": 0,
+    "ventas": 0,
+    "stops_loss": 0,
+    "take_profit": 0,
+    "saldo": 0.0,
+    "price_compra": 0.0,
+    "price_take_profit": 0.0,
+    "stop_take_price": 0.0,
+    "stop_price": 0.0,
+    "rsi_min": 100.0,
+    "rsi_max": 0.0,
+    "cicles_cont": 0
+}
