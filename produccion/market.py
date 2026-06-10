@@ -22,7 +22,7 @@ def get_decimales(par: str):
     spot_client = Client()
     info = spot_client.exchange_info(symbol=par)['symbols'][0]['filters']
     tickSize = float(info[0]['tickSize'])
-    stepSize = float(info[2]['stepSize'])
+    stepSize = float(info[1]['stepSize'])
 
     def busca_decimal(step):
         mult = step
