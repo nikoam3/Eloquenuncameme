@@ -13,6 +13,15 @@ MODELO_PATH   = 'modelo_lr.joblib'
 SCALER_PATH   = 'scaler_lr.joblib'
 PAR           = "ETHUSDT"
 
+FEATURES = [
+    'close_vs_ema200', 'ema50_vs_ema200',
+    'rsi',
+    'atr_relativo', 'atr_tendencia', 'bb_ancho',
+    'adx',
+    'hora', 'dia_semana',
+    'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
+]
+
 
 # ============================================================
 # ENTRENAMIENTO Y GUARDADO DEL MODELO
@@ -25,16 +34,7 @@ def entrenar_y_guardar():
     print("Cargando dataset...")
     df = pd.read_parquet('dataset_ml.parquet')
 
-    FEATURES = [
-        'close_vs_ema200', 'ema50_vs_ema200',
-        'rsi',
-        'atr_relativo', 'atr_tendencia', 'bb_ancho',
-        'adx',
-        'hora', 'dia_semana',
-        'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
-    ]
-
-    X = df[FEATURES]
+    X = df.loc[:, FEATURES].copy()
     y = df['target']
 
     print(f"Entrenando con {len(df):,} muestras...")
@@ -90,20 +90,14 @@ def predecir(modelo, scaler, par: str = PAR) -> dict:
         - operar:  True si supera el umbral
         - señales: valores actuales de las features clave
     """
-    FEATURES = [
-        'close_vs_ema200', 'ema50_vs_ema200',
-        'atr_relativo', 'atr_tendencia', 'bb_ancho',
-        'rsi',
-        'adx',
-        'hora', 'dia_semana',
-        'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
-    ]
-
     # Construimos features con datos actuales
     features_df, _ = construir_features(par)
 
-    # Tomamos la última fila: el momento actual
-    ultima = features_df[FEATURES].iloc[-1:]
+    # Reordenamos y alineamos exactamente como en entrenamiento
+    ultima = features_df.reindex(columns=FEATURES).dropna().iloc[-1:]
+
+    if ultima.empty:
+        raise ValueError("No se pudieron construir features válidas para predecir.")
 
     # Escalamos y predecimos
     X_scaled = scaler.transform(ultima)
