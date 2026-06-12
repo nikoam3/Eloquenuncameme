@@ -13,7 +13,7 @@ from strategy import (
     incrementar_ciclo
 )
 from notifier import enviar
-from config import PAR, INTERVALO, DEBUG
+from config import PAR, DEBUG
 
 
 def imprimir_estado(ciclos: int, data):

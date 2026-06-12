@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import pandas_ta as ta
 from database import cargar_velas
+from market import get_precios
 
 # ============================================================
 # CONFIGURACIÓN
@@ -16,9 +17,9 @@ INT_1H    = "1h"
 # ============================================================
 def cargar_y_calcular(par: str, intervalo: str) -> pd.DataFrame:
     """
-    Carga velas desde la BD y calcula todos los indicadores técnicos.
+    Carga velas desde la API de binance y calcula todos los indicadores técnicos.
     """
-    df = cargar_velas(par, intervalo)
+    df = get_precios(par, intervalo)
 
     # Tendencia
     df['EMA200'] = ta.ema(df['Close'], length=200)
