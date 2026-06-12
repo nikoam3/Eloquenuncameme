@@ -108,11 +108,14 @@ def evaluar_compra(decimal_price: int,
     if not prediccion['operar']:
         return # el modelo no ve un contexto favorable, no compramos
 
+    estado["saldo"] = get_saldo("USDT")
+    
     # Resto igual: consultar saldo, calcular cantidad, ejecutar
+    """ ELIMINAMOS SALDO, YA QUE SIMULAMOS SOLO POR TELEGRAM
     estado["saldo"] = get_saldo("USDT")
     if estado["saldo"] <= 11:
         return
-
+    """
     price = float(
         get_order_book(PAR, decimal_price)['ask_price'].iloc[0]
     )
@@ -125,7 +128,7 @@ def evaluar_compra(decimal_price: int,
         quantity = round(
             (estado["saldo"] * 0.25) / price, decimal_quantity
         )
-
+    """ ELIMINAMOS ORDEN, YA QUE SIMULAMOS SOLO POR TELEGRAM
     orden = ejecutar_compra(PAR, price, quantity)
 
     if orden:
@@ -143,6 +146,22 @@ def evaluar_compra(decimal_price: int,
             f"🛑 Stop Loss: `{estado['stop_price']}`\n"
             f"🎯 Take Profit: `{estado['price_take_profit']}`\n"
             f"🧠 Prob ML: `{prob*100:.1f}%`"
+        )
+    """
+    estado["price_compra"]      = price
+    estado["price_take_profit"] = round(price * 1.01, decimal_price)
+    estado["stop_price"]        = round(price * 0.985, decimal_price)
+    estado["buy"]               = True
+    estado["compras"]          += 1
+    resetear_rsi()
+    enviar(
+        f"🟢 *COMPRA ejecutada*\n"
+        f"━━━━━━━━━━━━━━━\n"
+        f"💰 Precio: `{price}`\n"
+        f"📦 Cantidad: `{quantity}`\n"
+        f"🛑 Stop Loss: `{estado['stop_price']}`\n"
+        f"🎯 Take Profit: `{estado['price_take_profit']}`\n"
+        f"🧠 Prob ML: `{prob*100:.1f}%`"
         )
     guardar_estado(estado)
 
@@ -174,7 +193,7 @@ def evaluar_venta_ml(modelo_ml=None, scaler_ml=None,
     price = float(
         get_order_book(PAR, decimal_price)['bid_price'].iloc[0]
     )
-
+    """ ELIMINAMOS SALDO Y ORDEN YA QUE SIMULAMOS SOLO POR TELEGRAM
     if (quantity_pos * price) < 10:
         return
 
@@ -191,6 +210,15 @@ def evaluar_venta_ml(modelo_ml=None, scaler_ml=None,
         )
         estado["ventas"] += 1
         resetear_posicion()
+    """
+    enviar(
+            f"🔵 VENTA por señal ML\n"
+            f"Precio: {price}\n"
+            f"Prob actual: {prob*100:.1f}%\n"
+            f"Contexto revertido"
+        )
+    estado["ventas"] += 1
+    resetear_posicion()
     guardar_estado(estado)
 
 
@@ -219,9 +247,10 @@ def evaluar_stop_loss(data, decimal_price: int, decimal_quantity: int):
     quantity_pos = get_saldo(SYMBOL)
     price = float(get_order_book(PAR, decimal_price)['bid_price'].iloc[0])
 
+    """ ELIMINAMOS SALDO, YA QUE SIMULAMOS SOLO POR TELEGRAM
     if (quantity_pos * price) < 10:
         return
-
+    """
     quantity = round(quantity_pos * 0.999, decimal_quantity)
 
     # Determinamos el motivo para el mensaje
@@ -231,11 +260,13 @@ def evaluar_stop_loss(data, decimal_price: int, decimal_quantity: int):
     else:
         motivo = "TAKE PROFIT"
         estado["take_profit"] += 1
-
+    """ ELIMINAMOS ORDEN, YA QUE SIMULAMOS SOLO POR TELEGRAM
     orden = ejecutar_venta(PAR, price, quantity, motivo=motivo)
 
     if orden:
         resetear_posicion()
+    """
+    resetear_posicion()
     guardar_estado(estado)
 
 
