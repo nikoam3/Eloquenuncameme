@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import pandas_ta as ta
-from backtesting.database import cargar_velas
+from database import cargar_velas
 
 # ============================================================
 # CONFIGURACIÓN
