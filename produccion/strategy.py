@@ -39,7 +39,7 @@ def cargar_estado() -> dict:
             
             # Combinamos el estado inicial con el cargado. 
             # Esto es vital por si en el futuro agregás nuevas claves al ESTADO_INICIAL.
-            return {**estado_inicial, **estado_cargado}
+            return {**estado_cargado}
             
         except json.JSONDecodeError:
             logging.error("🛑 Archivo de estado corrupto. Iniciando con estado de fábrica.")
@@ -182,7 +182,10 @@ def evaluar_venta_ml(modelo_ml=None, scaler_ml=None,
 
     prediccion = predecir(modelo_ml, scaler_ml, PAR)
     prob = prediccion['prob']
-
+    
+    print(f"  🧠 ML: prob={prob} | "
+          f"RSI_1h={prediccion['señales']['rsi_1h']}")
+    
     UMBRAL_VENTA = 1 - 0.63  # = 0.37
 
     if prob >= UMBRAL_VENTA:
