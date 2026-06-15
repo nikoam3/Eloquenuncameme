@@ -21,7 +21,7 @@ def reentrenar():
 
     # 2. Reconstruimos features con datos actualizados
     print("\n2. Construyendo features actualizadas...")
-    features_df, df_15m = construir_features("ETHUSDT")
+    features_df, df_15m = construir_features("ETHUSDT", True)
 
     # 3. Recalculamos el target
     print("\n3. Calculando target...")
