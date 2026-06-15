@@ -6,10 +6,10 @@
     "take_profit": 0,
     "saldo": 0.44473884,
     "price_compra": 1726.38,
-    "price_take_profit": 1743.64,
-    "stop_take_price": 0.0,
+    "price_take_profit": 1845.53,
+    "stop_take_price": 1827.07,
     "stop_price": 1700.48,
     "rsi_min": 100.0,
     "rsi_max": 0.0,
-    "cicles_cont": 17
+    "cicles_cont": 24
 }
