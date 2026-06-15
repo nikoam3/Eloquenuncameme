@@ -15,11 +15,14 @@ INT_1H    = "1h"
 # ============================================================
 # CARGA Y PREPARACIÓN DE DATOS
 # ============================================================
-def cargar_y_calcular(par: str, intervalo: str) -> pd.DataFrame:
+def cargar_y_calcular(par: str, intervalo: str, reentrenar: bool = None) -> pd.DataFrame:
     """
     Carga velas desde la API de binance y calcula todos los indicadores técnicos.
     """
-    df = get_precios(par, intervalo)
+    if reentrenar:
+        df = cargar_velas(par, intervalo)
+    else:
+        df = get_precios(par, intervalo)
 
     # Tendencia
     df['EMA200'] = ta.ema(df['Close'], length=200)
@@ -56,15 +59,15 @@ def cargar_y_calcular(par: str, intervalo: str) -> pd.DataFrame:
 # ============================================================
 # FEATURES MULTI-TIMEFRAME
 # ============================================================
-def construir_features(par: str = PAR) -> pd.DataFrame:
+def construir_features(par: str = PAR, reentrenar: bool = None) -> pd.DataFrame:
     """
     Construye el DataFrame de features combinando 15m y 1h.
     Cada fila representa un momento en el tiempo con toda
     la información disponible HASTA ese momento (sin leakage).
     """
     print(f"Cargando datos {par}...")
-    df_15m = cargar_y_calcular(par, INT_15M)
-    df_1h  = cargar_y_calcular(par, INT_1H)
+    df_15m = cargar_y_calcular(par, INT_15M, reentrenar=reentrenar)
+    df_1h  = cargar_y_calcular(par, INT_1H, reentrenar=reentrenar)
 
     print(f"  15m: {len(df_15m):,} velas")
     print(f"  1h:  {len(df_1h):,} velas")
