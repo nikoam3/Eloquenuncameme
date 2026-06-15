@@ -1,5 +1,5 @@
 # Agregar junto a los otros imports
-from modelo_produccion import cargar_modelo, predecir
+from modelo_produccion import cargar_modelo
 import time
 import datetime as dt
 from indicators import get_datos
@@ -84,8 +84,8 @@ def main():
             # 2. Evaluamos señales en orden de prioridad
             evaluar_stop_loss(data, decimal_price, decimal_quantity)
             actualizar_trailing_stop(data, decimal_price)
-            evaluar_venta_ml(decimal_price, decimal_quantity, modelo_ml, scaler_ml)
-            evaluar_compra(decimal_price, decimal_quantity, modelo_ml, scaler_ml)                
+            evaluar_venta_ml(modelo_ml, scaler_ml, decimal_price, decimal_quantity)
+            evaluar_compra(decimal_price, decimal_quantity, modelo_ml, scaler_ml)
             
             # 3. Actualizamos contadores
             incrementar_ciclo()
