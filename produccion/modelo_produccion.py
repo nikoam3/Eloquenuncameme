@@ -118,3 +118,19 @@ def predecir(modelo, scaler, par: str = PAR) -> dict:
         'operar':  prob >= UMBRAL_PROB,
         'señales': señales
     }
+
+# ============================================================
+# EJECUCIÓN
+# ============================================================
+"""if __name__ == "__main__":
+    entrenar_y_guardar()
+    resultado = predecir(*cargar_modelo())
+    print(f"\nProbabilidad de operación ganadora: {resultado['prob']*100:.2f}%")
+    print("Señales clave:")
+    for clave, valor in resultado['señales'].items():
+        print(f"  {clave}: {valor}")
+
+    # Ejemplo de log completo (puedes adaptarlo a tu formato)
+    #print(
+        f"\n{'='*40}"
+        f"\n Predicción para {PAR}"""
