@@ -1,15 +1,15 @@
 {
-    "buy": true,
-    "compras": 1,
+    "buy": false,
+    "compras": 2,
     "ventas": 0,
-    "stops_loss": 0,
-    "take_profit": 0,
+    "stops_loss": 1,
+    "take_profit": 1,
     "saldo": 0.44473884,
-    "price_compra": 1726.38,
-    "price_take_profit": 1845.53,
-    "stop_take_price": 1827.07,
-    "stop_price": 1700.48,
+    "price_compra": 0.0,
+    "price_take_profit": 0.0,
+    "stop_take_price": 0.0,
+    "stop_price": 0.0,
     "rsi_min": 100.0,
     "rsi_max": 0.0,
-    "cicles_cont": 24
+    "cicles_cont": 1
 }
