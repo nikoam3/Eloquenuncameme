@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
-from backtesting.features import construir_features, crear_target
-from backtesting.database import cargar_velas
+from features import construir_features, crear_target
+from database import cargar_velas
 import pandas_ta as ta
 import warnings
 warnings.filterwarnings('ignore')
@@ -23,11 +23,11 @@ MAX_VELAS      = 96
 
 FEATURES = [
     'close_vs_ema200', 'ema50_vs_ema200',
-    'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'rsi',
+    'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx',
     'hora', 'dia_semana',
-    'tendencia_1h', 'rsi_1h', 'adx_1h'
+    'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
 ]
 
 
