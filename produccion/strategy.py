@@ -216,8 +216,11 @@ def evaluar_venta_ml(modelo_ml=None, scaler_ml=None,
     """
     enviar(
             f"🔵 VENTA por señal ML\n"
-            f"Precio: {price}\n"
-            f"Prob actual: {prob*100:.1f}%\n"
+            f"━━━━━━━━━━━━━━━\n"
+            f"💰 Precio: `{price}`\n"
+            f"📦 Cantidad: `{quantity_pos}`\n"
+            f"🧠 Prob actual: {prob*100:.1f}%\n"
+            f"💰 Resultado: % {((price / estado['price_compra']) - 1) * 100:.2%}\n"
             f"Contexto revertido"
         )
     estado["ventas"] += 1
@@ -269,6 +272,14 @@ def evaluar_stop_loss(data, decimal_price: int, decimal_quantity: int):
     if orden:
         resetear_posicion()
     """
+    enviar(
+                f"🔵 VENTA por señal {motivo}\n"
+                 f"━━━━━━━━━━━━━━━\n"
+                f"💰 Precio: `{price}`\n"
+                f"📦 Cantidad: `{quantity_pos}`\n"
+                f"💰 Resultado: % {((price / estado['price_compra']) - 1) * 100:.2%}\n"
+            )
+
     resetear_posicion()
     guardar_estado(estado)
 
