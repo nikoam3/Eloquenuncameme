@@ -1,8 +1,3 @@
-"lee el .env y expone las variables al resto del proyecto"
-from dotenv import load_dotenv
-import os
-import sys
-
 """
 Lee el .env, valida y expone las variables al resto del proyecto.
 Falla de manera segura si falta configuración esencial.
