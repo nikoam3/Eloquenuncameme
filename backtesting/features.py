@@ -244,6 +244,7 @@ if __name__ == "__main__":
     try:
         df_ml.to_parquet('dataset_ml.parquet')
         print("\n✅ Dataset guardado en dataset_ml.parquet")
+        print("DataFrame final", df_ml)
     except ImportError:
         print("\n⚠️  No se encontró un motor Parquet válido.")
         print("   Guardando dataset como CSV en su lugar...")

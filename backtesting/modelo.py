@@ -26,13 +26,13 @@ def cargar_dataset() -> tuple:
     df = pd.read_parquet(ARCHIVO_DATASET)
 
     FEATURES = [
-        'close_vs_ema200', 'ema50_vs_ema200',
-        'rsi',
-        'atr_relativo', 'atr_tendencia', 'bb_ancho',
-        'adx',
-        'hora', 'dia_semana',
-        'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
-    ]
+    'close_vs_ema200', 'ema50_vs_ema200',
+    'rsi',
+    'atr_relativo', 'atr_tendencia', 'bb_ancho',
+    'adx',
+    'hora', 'dia_semana',
+    'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
+]
 
     X = df[FEATURES]
     y = df['target']
