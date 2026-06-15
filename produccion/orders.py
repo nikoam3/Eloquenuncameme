@@ -135,7 +135,7 @@ def ejecutar_venta(par: str, price: float, quantity: float, motivo: str = "VENTA
     total_obtenido = round(price * ejecutado, 2)
 
     if estado == 'FILLED':
-        enviar(f"🔴 {motivo} completada\nPrecio: {price}\Cantidad: {ejecutado}\nTotal: {total_obtenido} USDT")
+        enviar(f"🔴 {motivo} completada\nPrecio: {price}\nCantidad: {ejecutado}\nTotal: {total_obtenido} USDT")
     elif estado == 'CANCELED' and ejecutado > 0:
         enviar(f"⚠️ {motivo} parcial (Cancelada)\nSe vendieron {ejecutado} de {quantity}\nTotal: {total_obtenido} USDT")
     elif estado == 'CANCELED' and ejecutado == 0:

@@ -19,7 +19,7 @@ def get_client():
 
 def get_decimales(par: str):
     """Obtiene la cantidad de decimales para precio y cantidad del par"""
-    spot_client = Client()
+    spot_client = get_client()
     info = spot_client.exchange_info(symbol=par)['symbols'][0]['filters']
     tickSize = float(info[0]['tickSize'])
     stepSize = float(info[1]['stepSize'])
