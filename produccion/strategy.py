@@ -150,7 +150,7 @@ def evaluar_compra(decimal_price: int,
     """
     estado["price_compra"]      = price
     estado["price_take_profit"] = round(price * 1.01, decimal_price)
-    estado["stop_price"]        = round(price * 0.985, decimal_price)
+    estado["stop_price"]        = round(price * 0.975, decimal_price)
     estado["buy"]               = True
     estado["compras"]          += 1
     resetear_rsi()
