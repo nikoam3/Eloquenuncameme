@@ -19,20 +19,28 @@ def get_client():
 
 def get_decimales(par: str):
     """Obtiene la cantidad de decimales para precio y cantidad del par"""
-    spot_client = get_client()
-    info = spot_client.exchange_info(symbol=par)['symbols'][0]['filters']
-    tickSize = float(info[0]['tickSize'])
-    stepSize = float(info[1]['stepSize'])
+    try:
+        url = 'https://api.binance.com/api/v3/exchangeInfo'
+        p = {'symbol': par}
+        r = requests.get(url, params=p)
+        r.raise_for_status()
+        info = r.json()['symbols'][0]['filters']
+        
+        tickSize = float(info[0]['tickSize'])
+        stepSize = float(info[1]['stepSize'])
 
-    def busca_decimal(step):
-        mult = step
-        decimal = 0
-        while mult != 1:
-            decimal += 1
-            mult *= 10
-        return decimal
+        def busca_decimal(step):
+            mult = step
+            decimal = 0
+            while mult != 1:
+                decimal += 1
+                mult *= 10
+            return decimal
 
-    return busca_decimal(tickSize), busca_decimal(stepSize)
+        return busca_decimal(tickSize), busca_decimal(stepSize)
+    except requests.RequestException as e:
+        logging.error(f"Error al obtener decimales de {par}: {e}")
+        raise
 
 def get_precios(par: str, intervalo: str) -> pd.DataFrame:
     """Descarga las últimas 1000 velas del par e intervalo indicados"""
