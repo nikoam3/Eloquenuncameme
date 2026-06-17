@@ -2,20 +2,7 @@ import requests
 import pandas as pd
 import logging
 from binance.spot import Spot as Client
-from config import BINANCE_KEY, BINANCE_SECRET, PAR
-
-_binance_client = None
-
-def get_client():
-    """
-    Retorna la instancia del cliente de Binance.
-    Aplica el patrón Singleton para evitar crear múltiples conexiones HTTP.
-    """
-    global _binance_client
-    if _binance_client is None:
-        # Solo se inicializa la primera vez que se llama
-        _binance_client = Client(BINANCE_KEY, BINANCE_SECRET)
-    return _binance_client
+from client import get_client
 
 def get_decimales(par: str):
     """Obtiene la cantidad de decimales para precio y cantidad del par"""
