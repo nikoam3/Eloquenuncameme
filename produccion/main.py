@@ -6,6 +6,7 @@ from indicators import get_datos
 from market import get_decimales
 from strategy import (
     cargar_estado,
+    get_estado,
     evaluar_compra,
     evaluar_venta_ml,
     evaluar_stop_loss,
@@ -18,7 +19,7 @@ from config import PAR, DEBUG
 
 def imprimir_estado(ciclos: int, data):
     """Imprime el estado actual del bot en consola"""
-    estado = cargar_estado()
+    estado = get_estado()
     print(
         f"\n{'='*40}"
         f"\n Ciclo:      {ciclos}"
@@ -76,16 +77,19 @@ def main():
     while True:
         # Cuando time.sleep() termina, sabemos que es el momento exacto
         dormir_hasta_proxima_ejecucion(minutos_intervalo=15)
-        
+        estado = get_estado()
         try:
             # 1. Obtenemos datos con indicadores
             data = get_datos()
 
             # 2. Evaluamos señales en orden de prioridad
             evaluar_stop_loss(data, decimal_price, decimal_quantity)
-            actualizar_trailing_stop(data, decimal_price)
-            evaluar_venta_ml(modelo_ml, scaler_ml, decimal_price, decimal_quantity)
-            evaluar_compra(decimal_price, decimal_quantity, modelo_ml, scaler_ml)
+
+            if not estado["buy"]:   # solo si no hay posición abierta
+                evaluar_compra(decimal_price, decimal_quantity, modelo_ml, scaler_ml)
+            else:
+                actualizar_trailing_stop(data, decimal_price)
+                evaluar_venta_ml(modelo_ml, scaler_ml, decimal_price, decimal_quantity)
             
             # 3. Actualizamos contadores
             incrementar_ciclo()

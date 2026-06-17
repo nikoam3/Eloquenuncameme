@@ -2,7 +2,7 @@ from market import get_saldo, get_order_book
 from orders import ejecutar_compra, ejecutar_venta
 from notifier import enviar
 from config import PAR, SYMBOL
-from modelo_produccion import predecir
+from modelo_produccion import UMBRAL_PROB, predecir
 import json
 import os
 import logging 
@@ -65,18 +65,26 @@ def guardar_estado(estado_actual: dict):
     except Exception as e:
         logging.error(f"Error crítico al guardar el estado: {e}")
 
-# --- Uso en tu archivo strategy.py ---
-# Al arrancar el bot, inicializas la variable así:
-estado = cargar_estado()
-guardar_estado(estado) # Guardamos inmediatamente para crear el archivo si no existe
+
+# strategy.py — DESPUÉS
+_estado = None
+
+def get_estado() -> dict:
+    global _estado
+    if _estado is None:
+        _estado = cargar_estado()
+        guardar_estado(_estado)
+    return _estado
 
 def resetear_rsi():
+    estado = get_estado()
     estado["rsi_min"] = 100.0
     estado["rsi_max"] = 0.0
     estado["cicles_cont"] = 0
 
 
 def resetear_posicion():
+    estado = get_estado()
     estado["stop_price"] = 0.0
     estado["stop_take_price"] = 0.0
     estado["price_take_profit"] = 0.0
@@ -92,6 +100,8 @@ def evaluar_compra(decimal_price: int,
     Evalúa si corresponde comprar según los indicadores
     y confirma con el modelo ML si está disponible.
     """
+    estado = get_estado()
+    
     if estado["buy"]:
         return  # ya tenemos posición abierta, no compramos otra
     
@@ -174,6 +184,8 @@ def evaluar_venta_ml(modelo_ml=None, scaler_ml=None,
     el contexto de mercado se revirtió.
     Solo actúa si hay posición abierta.
     """
+    estado = get_estado()
+
     if not estado["buy"]:
         return
 
@@ -186,7 +198,7 @@ def evaluar_venta_ml(modelo_ml=None, scaler_ml=None,
     print(f"  🧠 ML: prob={prob} | "
           f"RSI_1h={prediccion['señales']['rsi_1h']}")
     
-    UMBRAL_VENTA = 1 - 0.63  # = 0.37
+    UMBRAL_VENTA = 1 - UMBRAL_PROB  # = 0.37
 
     if prob >= UMBRAL_VENTA:
         return  # contexto sigue favorable, no vendemos
@@ -233,6 +245,8 @@ def evaluar_stop_loss(data, decimal_price: int, decimal_quantity: int):
     """
     Evalúa si el precio cayó por debajo del stop loss o del trailing stop.
     """
+    estado = get_estado()
+
     close_actual = float(data['Close'].iloc[-2])
 
     # Si no hay posición abierta o no hay stops definidos, no hace nada
@@ -290,6 +304,8 @@ def actualizar_trailing_stop(data, decimal_price: int):
     Actualiza el trailing stop a medida que el precio sube.
     Tres niveles de protección según cuánto subió desde la compra.
     """
+    estado = get_estado()
+
     if not estado["buy"]:
         return
 
@@ -322,6 +338,8 @@ def incrementar_ciclo():
     Cada 50 ciclos sin operación resetea los mínimos/máximos de RSI
     para evitar que queden valores viejos bloqueando nuevas entradas.
     """
+    estado = get_estado()
+    
     estado["cicles_cont"] += 1
     if estado["cicles_cont"] >= 50:
         resetear_rsi()
