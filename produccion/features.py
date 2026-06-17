@@ -136,6 +136,9 @@ def construir_features(par: str = PAR, reentrenar: bool = None) -> pd.DataFrame:
           f"{len(features.columns)} columnas")
     print(f"   Período: {features.index[0]} → {features.index[-1]}")
 
+    df_15m = df_15m.iloc[:-1]   # descartamos la última vela (incompleta)
+    features = features.iloc[:-1]
+
     return features, df_15m
 
 
