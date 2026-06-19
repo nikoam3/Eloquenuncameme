@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+from sklearn.calibration import CalibratedClassifierCV
 import joblib
 import os
 from features import construir_features
@@ -8,7 +9,7 @@ from features import construir_features
 # ============================================================
 # CONFIGURACIÓN
 # ============================================================
-UMBRAL_PROB   = 0.55
+UMBRAL_PROB   = 0.8
 MODELO_PATH   = 'modelo_lr.joblib'
 SCALER_PATH   = 'scaler_lr.joblib'
 PAR           = "ETHUSDT"
@@ -42,9 +43,12 @@ def entrenar_y_guardar():
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    modelo = LogisticRegression(
+    modelo = CalibratedClassifierCV(
+        LogisticRegression(
         max_iter=1000,
-        class_weight='balanced'
+        class_weight='balanced'),
+        method='isotonic',
+        cv=3
     )
     modelo.fit(X_scaled, y)
 
@@ -122,15 +126,10 @@ def predecir(modelo, scaler, par: str = PAR) -> dict:
 # ============================================================
 # EJECUCIÓN
 # ============================================================
-"""if __name__ == "__main__":
+if __name__ == "__main__":
     entrenar_y_guardar()
     resultado = predecir(*cargar_modelo())
     print(f"\nProbabilidad de operación ganadora: {resultado['prob']*100:.2f}%")
     print("Señales clave:")
     for clave, valor in resultado['señales'].items():
         print(f"  {clave}: {valor}")
-
-    # Ejemplo de log completo (puedes adaptarlo a tu formato)
-    #print(
-        f"\n{'='*40}"
-        f"\n Predicción para {PAR}"""
