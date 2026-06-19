@@ -107,6 +107,19 @@ def construir_features(par: str = PAR, reentrenar: bool = None) -> pd.DataFrame:
 
     # Volumen relativo
     #features['vol_relativo'] = df_15m['Vol_rel'].clip(0, 5)  # cap en 5x
+        
+    #rsi_pendiente_vs_precio: compara cuanto cambio el precio (%) vs cuanto cambio el rsi
+    cambio_precio_pct = (
+        df_15m['Close'] / df_15m['Close'].shift(20) - 1
+    ) * 100
+    cambio_rsi = df_15m['RSI'] - df_15m['RSI'].shift(20)
+
+    # Si el precio sube mucho y el RSI sube poco (o baja),
+    # el ratio se vuelve alto/negativo => señal de divergencia
+    # Usamos un epsilon para evitar división por cero
+    features['rsi_pendiente_vs_precio'] = (
+        cambio_precio_pct - cambio_rsi
+    )
 
     # Contexto temporal
     features['hora']       = df_15m.index.hour
