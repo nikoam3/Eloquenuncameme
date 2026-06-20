@@ -19,6 +19,7 @@ FEATURES = [
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx',
+    'rsi_pendiente_vs_precio',
     'hora', 'dia_semana',
     'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
 ]
