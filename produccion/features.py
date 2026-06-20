@@ -52,6 +52,9 @@ def cargar_y_calcular(par: str, intervalo: str, reentrenar: bool = None) -> pd.D
     df['Vol_media'] = ta.sma(df['Volume'], length=20)
     df['Vol_rel']   = df['Volume'] / df['Vol_media']
 
+    # MACD solo histograma
+    df['MACD_hist'] = ta.macd(df['Close'], fast=12, slow=26, signal=6)['MACDh_12_26_6']
+
     df = df.dropna()
     return df
 
@@ -120,6 +123,9 @@ def construir_features(par: str = PAR, reentrenar: bool = None) -> pd.DataFrame:
     features['rsi_pendiente_vs_precio'] = (
         cambio_precio_pct - cambio_rsi
     )
+
+    #macd histograma normalizado por precio 
+    features['macd_histograma'] = df_15m['MACD_hist'] / df_15m['Close'] * 1000
 
     # Contexto temporal
     features['hora']       = df_15m.index.hour

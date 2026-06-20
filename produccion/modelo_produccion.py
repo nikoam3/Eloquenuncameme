@@ -18,8 +18,8 @@ FEATURES = [
     'close_vs_ema200', 'ema50_vs_ema200',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
-    'adx',
-    'rsi_pendiente_vs_precio',
+    'adx', 'rsi_pendiente_vs_precio',
+    'macd_histograma',
     'hora', 'dia_semana',
     'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
 ]
