@@ -25,7 +25,8 @@ FEATURES = [
     'close_vs_ema200', 'ema50_vs_ema200',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
-    'adx',
+    'adx', 'rsi_pendiente_vs_precio',
+    'macd_histograma',
     'hora', 'dia_semana',
     'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
 ]
@@ -135,7 +136,8 @@ def simular_clasico(df: pd.DataFrame) -> tuple:
 def simular_ml(features_df: pd.DataFrame,
                df_15m: pd.DataFrame,
                modelo,
-               scaler) -> tuple:
+               scaler,
+               umbral_prob: float = UMBRAL_PROB) -> tuple:
     """
     Estrategia ML: el modelo decide cuándo comprar.
     Sin indicadores técnicos como filtro de entrada.
@@ -194,7 +196,7 @@ def simular_ml(features_df: pd.DataFrame,
                                        else 0.990), 6)
 
         # Compra: solo si el modelo supera el umbral
-        if prob >= UMBRAL_PROB and not en_pos:
+        if prob >= umbral_prob and not en_pos:
             if capital > 11:
                 qty   = capital * 0.25 / precio if capital * 0.25 > 11 \
                         else capital * 0.999 / precio
@@ -213,7 +215,7 @@ def simular_ml(features_df: pd.DataFrame,
                                 'prob': round(prob, 3)})
 
         # Venta: el modelo dice que la probabilidad bajó
-        elif prob < (1 - UMBRAL_PROB) and en_pos:
+        elif prob < (1 - umbral_prob) and en_pos:
             ingreso = posicion * precio * (1 - COMISION)
             ops.append({'tipo': 'VENTA',
                         'ganancia_pct': (precio/price_compra-1)*100,
