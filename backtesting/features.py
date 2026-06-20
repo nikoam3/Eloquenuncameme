@@ -48,6 +48,9 @@ def cargar_y_calcular(par: str, intervalo: str) -> pd.DataFrame:
     df['Vol_media'] = ta.sma(df['Volume'], length=20)
     df['Vol_rel']   = df['Volume'] / df['Vol_media']
 
+    # MACD solo histograma
+    df['MACD_hist'] = ta.macd(df['Close'], fast=12, slow=26, signal=6)['MACDh_12_26_6']
+
     df = df.dropna()
     return df
 
@@ -103,6 +106,24 @@ def construir_features(par: str = PAR) -> pd.DataFrame:
 
     # Volumen relativo
     #features['vol_relativo'] = df_15m['Vol_rel'].clip(0, 5)  # cap en 5x
+
+    #rsi_pendiente_vs_precio: compara cuanto cambio el precio (%) vs cuanto cambio el rsi
+    cambio_precio_pct = (
+        df_15m['Close'] / df_15m['Close'].shift(20) - 1
+    ) * 100
+    cambio_rsi = df_15m['RSI'] - df_15m['RSI'].shift(20)
+
+    # Si el precio sube mucho y el RSI sube poco (o baja),
+    # el ratio se vuelve alto/negativo => señal de divergencia
+    # Usamos un epsilon para evitar división por cero
+    features['rsi_pendiente_vs_precio'] = (
+        cambio_precio_pct - cambio_rsi
+    )
+
+    # Variante 1: histograma normalizado por precio (para que sea
+    # comparable entre distintos niveles de precio de ETH en el tiempo)
+    features['macd_histograma'] = df_15m['MACD_hist'] / df_15m['Close'] * 1000
+
 
     # Contexto temporal
     features['hora']       = df_15m.index.hour
