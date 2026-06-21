@@ -9,7 +9,7 @@ from features import construir_features
 # ============================================================
 # CONFIGURACIÓN
 # ============================================================
-UMBRAL_PROB   = 0.75
+UMBRAL_PROB   = 0.7
 MODELO_PATH   = 'modelo_lr.joblib'
 SCALER_PATH   = 'scaler_lr.joblib'
 PAR           = "ETHUSDT"
