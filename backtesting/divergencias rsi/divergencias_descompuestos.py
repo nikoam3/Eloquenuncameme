@@ -197,3 +197,23 @@ if __name__ == "__main__":
     print(f"  + las 3 juntas:          {auc_completo_prom:.4f} "
           f"({auc_completo_prom-auc_base_prom:+.4f})")
     print(f"\n  Mejor feature individual: {mejor_individual}")
+
+"""
+PASO 1: Confirma el baseline (debería coincidir con tu corrida anterior)
+
+PASO 2: Agrega cada feature SOLA al baseline
+         → si una sola explica casi todo el +0.012 del total,
+           las otras dos son redundantes
+
+PASO 3: Las tres juntas (tu resultado anterior, de referencia)
+
+PASO 4: Pares de features
+         → ¿hay sinergia entre dos features que no se ve
+           al mirarlas solas? A veces dos señales débiles
+           se complementan
+
+PASO 5: Coeficientes del modelo final
+         → cuánto "peso" interno le asigna la regresión
+           logística a cada una (con datos estandarizados,
+           los coeficientes son comparables directamente)
+"""

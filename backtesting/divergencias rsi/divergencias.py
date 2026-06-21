@@ -260,3 +260,18 @@ if __name__ == "__main__":
         print(f"  ⚠️  Sin mejora significativa. Las divergencias, tal")
         print(f"     como las calculamos, no agregan información nueva")
         print(f"     que el modelo no tuviera ya.")
+
+"""
+1. Frecuencia de divergencias
+   → ¿son raras o frecuentes? Si aparecen en <1% de las velas,
+     aunque funcionen, su impacto en el AUC global será chico
+
+2. Tasa de éxito según contexto
+   → Validación de la TEORÍA antes de mirar el modelo:
+     ¿con divergencia bajista el target realmente es peor?
+     Si esto no se cumple, la feature no tiene sentido aunque
+     suba el AUC por casualidad estadística
+
+3. AUC walk-forward: base vs base+divergencias
+   → La medición final que decide si la integramos
+"""

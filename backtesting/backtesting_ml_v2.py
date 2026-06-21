@@ -196,3 +196,15 @@ if __name__ == "__main__":
     print(f"  {'umbral 0.63':>8}: retorno +24.63%  ops: 853  "
           f"win rate: 77.0%  maxDD: -29.73%")
     
+"""
+PASO 1: Mismo umbral 0.63, pero con modelo calibrado
+  → Compara directamente contra tu resultado anterior
+    (+24.63%, 853 ops, 77% win rate)
+  → Esperamos MÁS operaciones (vimos 65% de señales vs 15%)
+    pero probablemente menor win rate
+
+PASO 2: Barrido de umbrales 0.55 a 0.75
+  → Busca si hay un umbral distinto que funcione mejor
+    ahora que las probabilidades significan otra cosa
+  → Con esto decidimos el umbral final para producción
+"""

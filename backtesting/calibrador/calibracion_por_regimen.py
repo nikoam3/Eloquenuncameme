@@ -177,3 +177,10 @@ if __name__ == "__main__":
     print(f"    Sin calibrar:    {np.mean([r['sin_calibrar'] for r in resultados]):.4f}")
     print(f"    Isotonic único:  {np.mean([r['unico'] for r in resultados]):.4f}")
     print(f"    Por régimen:     {np.mean([r['por_regimen'] for r in resultados]):.4f}")
+
+"""
+Si la hipótesis del régimen es correcta, 
+deberíamos ver que "Por régimen" mejora el ECE 
+especialmente en V1 y V2, las ventanas problemáticas, 
+más que en V3/V4 que ya estaban relativamente bien.
+"""

@@ -172,3 +172,22 @@ if __name__ == "__main__":
     print(f"Balance global: {y.mean()*100:.1f}% positivos")
 
     walk_forward_comparacion(X, y)
+
+"""
+Config A: tu situación ACTUAL
+Config B: mejora de calibración (lo que proponíamos)
+Config C: ¿qué pasa si sacamos balanced directamente?
+Config D: sin balanced + calibración
+
+Las métricas clave a mirar:
+
+AUC → si C/D tienen AUC similar a A/B: sacar balanced no daña 
+       la discriminación → podemos seguir sin él
+
+Prec@0.63 → si C/D tienen precisión real más cercana a 0.63 
+             (gap más chico): el modelo sin balanced calibra solo
+
+% señales → si C/D generan muchas más señales con el mismo 
+             umbral: el modelo sin balanced es más optimista
+             → habría que subir el umbral
+"""

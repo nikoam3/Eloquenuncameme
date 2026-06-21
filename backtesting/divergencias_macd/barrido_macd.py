@@ -245,3 +245,23 @@ if __name__ == "__main__":
     print(f"    AUC final: {mejor_norm['auc']:.4f} "
           f"(mejora de {mejor_norm['auc'] - auc_base_prom:+.4f} "
           f"sobre el baseline)")
+    
+"""
+Por qué 5 combinaciones y no un grid exhaustivo. 
+Podríamos barrer docenas de combinaciones de fast/slow/signal, 
+pero eso multiplicaría el tiempo de cómputo sin necesariamente 
+aportar mucho más que entender la tendencia general 
+(¿más rápido es mejor? ¿más lento?). 
+Con 5 puntos bien elegidos —incluyendo el estándar como ancla de referencia— 
+ya vamos a ver si hay una dirección clara que valga la pena explorar más a fondo después.
+La columna std entre V sigue el mismo criterio que 
+usamos en el barrido de ventana del RSI: no alcanza 
+con mirar el promedio, hay que confirmar que no sea 
+un resultado inflado por una sola ventana atípica.
+Sobre la normalización por ATR: noté que tu 
+calcular_macd_histograma necesita la columna ATR ya 
+calculada en el DataFrame que recibe — la agregué al 
+cargar datos en el bloque de ejecución 
+(df_15m['ATR'] = ta.atr(...)) para que esté disponible 
+desde el principio, evitando recalcularla en cada iteración del barrido.
+"""

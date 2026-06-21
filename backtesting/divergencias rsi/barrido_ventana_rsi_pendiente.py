@@ -173,3 +173,16 @@ if __name__ == "__main__":
         print(f"    ventana={r['ventana']:>3}: "
               f"AUC={r['auc_promedio']:.4f}  "
               f"std={std_entre_ventanas:.4f}{marca}")
+        
+"""
+1. Solo calculamos rsi_pendiente_vs_precio (las binarias quedaron descartadas)
+
+2. Recalculamos la feature para CADA valor de ventana del barrido
+   → cada `ventana` produce una columna distinta, ej:
+     rsi_pendiente_v5, rsi_pendiente_v10, rsi_pendiente_v14...
+
+3. Agregamos la columna "std entre ventanas" al final
+   → esto es importante: si una ventana da buen AUC promedio
+     pero con mucha variación entre V1-V4, es menos confiable
+     que una con AUC similar pero más estable
+"""
