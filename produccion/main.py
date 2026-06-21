@@ -2,10 +2,9 @@
 from modelo_produccion import cargar_modelo
 import time
 import datetime as dt
-from indicators import get_datos
 from market import get_decimales
+from features import construir_features
 from strategy import (
-    cargar_estado,
     get_estado,
     evaluar_compra,
     evaluar_venta_ml,
@@ -80,16 +79,16 @@ def main():
         estado = get_estado()
         try:
             # 1. Obtenemos datos con indicadores
-            data = get_datos()
+            features, data = construir_features()
 
             # 2. Evaluamos señales en orden de prioridad
             evaluar_stop_loss(data, decimal_price, decimal_quantity)
 
             if not estado["buy"]:   # solo si no hay posición abierta
-                evaluar_compra(decimal_price, decimal_quantity, modelo_ml, scaler_ml)
+                evaluar_compra(decimal_price, decimal_quantity, modelo_ml, scaler_ml, features)
             else:
                 actualizar_trailing_stop(data, decimal_price)
-                evaluar_venta_ml(modelo_ml, scaler_ml, decimal_price, decimal_quantity)
+                evaluar_venta_ml(decimal_price, decimal_quantity, modelo_ml, scaler_ml, features)
             
             # 3. Actualizamos contadores
             incrementar_ciclo()

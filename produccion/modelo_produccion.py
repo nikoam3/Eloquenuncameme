@@ -9,7 +9,7 @@ from features import construir_features
 # ============================================================
 # CONFIGURACIÓN
 # ============================================================
-UMBRAL_PROB   = 0.8
+UMBRAL_PROB   = 0.75
 MODELO_PATH   = 'modelo_lr.joblib'
 SCALER_PATH   = 'scaler_lr.joblib'
 PAR           = "ETHUSDT"
@@ -84,7 +84,7 @@ def cargar_modelo():
 # ============================================================
 # PREDICCIÓN EN TIEMPO REAL
 # ============================================================
-def predecir(modelo, scaler, par: str = PAR) -> dict:
+def predecir(modelo, scaler, features_df: pd.DataFrame = None) -> dict:
     """
     Calcula las features del momento actual y
     devuelve la probabilidad de que la próxima
@@ -95,9 +95,6 @@ def predecir(modelo, scaler, par: str = PAR) -> dict:
         - operar:  True si supera el umbral
         - señales: valores actuales de las features clave
     """
-    # Construimos features con datos actuales
-    features_df, _ = construir_features(par)
-
     # Reordenamos y alineamos exactamente como en entrenamiento
     ultima = features_df.reindex(columns=FEATURES).dropna().iloc[-1:]
 
@@ -129,7 +126,8 @@ def predecir(modelo, scaler, par: str = PAR) -> dict:
 # ============================================================
 if __name__ == "__main__":
     entrenar_y_guardar()
-    resultado = predecir(*cargar_modelo())
+    features_df, _ = construir_features(PAR)
+    resultado = predecir(*cargar_modelo(), features_df)
     print(f"\nProbabilidad de operación ganadora: {resultado['prob']*100:.2f}%")
     print("Señales clave:")
     for clave, valor in resultado['señales'].items():

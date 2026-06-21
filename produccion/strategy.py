@@ -6,6 +6,7 @@ from modelo_produccion import UMBRAL_PROB, predecir
 import json
 import os
 import logging 
+import pandas as pd
 
 ARCHIVO_ESTADO = "estado.json"
 
@@ -95,7 +96,9 @@ def resetear_posicion():
 
 def evaluar_compra(decimal_price: int, 
                    decimal_quantity: int,
-                   modelo_ml=None, scaler_ml=None):
+                   modelo_ml=None, 
+                   scaler_ml=None,
+                   features: pd.DataFrame = None):
     """
     Evalúa si corresponde comprar según los indicadores
     y confirma con el modelo ML si está disponible.
@@ -109,7 +112,7 @@ def evaluar_compra(decimal_price: int,
     if modelo_ml is None or scaler_ml is None:
         return  # sin modelo no operamos
 
-    prediccion = predecir(modelo_ml, scaler_ml, PAR)
+    prediccion = predecir(modelo_ml, scaler_ml, features)
     prob = prediccion['prob']
 
     print(f"  🧠 ML: prob={prob} | "
@@ -176,9 +179,11 @@ def evaluar_compra(decimal_price: int,
     guardar_estado(estado)
 
 
-def evaluar_venta_ml(modelo_ml=None, scaler_ml=None,
-                     decimal_price: int = 6,
-                     decimal_quantity: int = 6):
+def evaluar_venta_ml(decimal_price: int, 
+                     decimal_quantity: int,
+                     modelo_ml=None, 
+                     scaler_ml=None,
+                     features: pd.DataFrame = None):
     """
     Cierra la posición si el modelo detecta que
     el contexto de mercado se revirtió.
@@ -192,7 +197,7 @@ def evaluar_venta_ml(modelo_ml=None, scaler_ml=None,
     if modelo_ml is None or scaler_ml is None:
         return
 
-    prediccion = predecir(modelo_ml, scaler_ml, PAR)
+    prediccion = predecir(modelo_ml, scaler_ml, features)
     prob = prediccion['prob']
     
     print(f"  🧠 ML: prob={prob} | "
@@ -247,8 +252,7 @@ def evaluar_stop_loss(data, decimal_price: int, decimal_quantity: int):
     """
     estado = get_estado()
 
-    close_actual = float(data['Close'].iloc[-2])
-
+    close_actual = float(data['Close'].iloc[-1])
     # Si no hay posición abierta o no hay stops definidos, no hace nada
     if not estado["buy"]:
         return
@@ -309,7 +313,7 @@ def actualizar_trailing_stop(data, decimal_price: int):
     if not estado["buy"]:
         return
 
-    close_actual = float(data['Close'].iloc[-2])
+    close_actual = float(data['Close'].iloc[-1])
     price_compra = estado["price_compra"]
 
     if close_actual <= estado["price_take_profit"]:
