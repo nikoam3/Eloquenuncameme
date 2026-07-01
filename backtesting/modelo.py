@@ -26,7 +26,7 @@ def cargar_dataset() -> tuple:
     df = pd.read_parquet(ARCHIVO_DATASET)
 
     FEATURES = [
-    'close_vs_ema200', 'ema50_vs_ema200',
+    'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx', 'rsi_pendiente_vs_precio',

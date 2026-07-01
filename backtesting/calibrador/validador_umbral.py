@@ -9,9 +9,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.calibration import CalibratedClassifierCV
 from features import construir_features, crear_target
-from database import cargar_velas
 from backtesting_ml import simular_ml, FEATURES
-import pandas_ta as ta
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -168,18 +166,9 @@ if __name__ == "__main__":
     print("🔬 Validación honesta del umbral elegido\n")
 
     print("Cargando datos...")
-    df_15m = cargar_velas("ETHUSDT", "15m")
-    df_15m['MM']  = ta.ema(df_15m['Close'], length=200)
-    df_15m['RSI'] = ta.rsi(df_15m['Close'], length=14)
-    adx = ta.adx(df_15m['High'], df_15m['Low'],
-                 df_15m['Close'], length=14)
-    df_15m['ADX'] = adx['ADX_14']
-    df_15m['MACD_hist'] = ta.macd(df_15m['Close'], fast=12, slow=26, signal=6)['MACDh_12_26_6']
-
-    df_15m = df_15m.dropna()
 
     print("Construyendo features ML...")
-    features_df, _ = construir_features("ETHUSDT")
+    features_df, _ = construir_features(PAR)
 
     target = crear_target(_.loc[features_df.index],
                           stop_loss=STOP_LOSS,

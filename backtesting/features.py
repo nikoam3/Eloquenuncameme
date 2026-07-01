@@ -6,9 +6,11 @@ from database import cargar_velas
 # ============================================================
 # CONFIGURACIÓN
 # ============================================================
-PAR       = "ETHUSDT"
+PAR       = "ZECUSDT"
+#INT_5M   = "5m"
 INT_15M   = "15m"
 INT_1H    = "1h"
+#INT_4H    = "4h"
 
 
 # ============================================================
@@ -23,6 +25,8 @@ def cargar_y_calcular(par: str, intervalo: str) -> pd.DataFrame:
     # Tendencia
     df['EMA200'] = ta.ema(df['Close'], length=200)
     df['EMA50']  = ta.ema(df['Close'], length=50)
+    df['EMA26']  = ta.ema(df['Close'], length=26)
+    df['EMA9']  = ta.ema(df['Close'], length=9)
 
     # Momentum
     df['RSI'] = ta.rsi(df['Close'], length=14)
@@ -83,6 +87,11 @@ def construir_features(par: str = PAR) -> pd.DataFrame:
     # Tendencia: relación EMA50 vs EMA200
     features['ema50_vs_ema200'] = (
         (df_15m['EMA50'] - df_15m['EMA200']) / df_15m['EMA200']
+    )
+
+    # Tendencia: relación EMA9 vs EMA26, algo más sensible a cambios recientes
+    features['ema9_vs_ema26'] = (
+        (df_15m['EMA9'] - df_15m['EMA26']) / df_15m['EMA26']
     )
 
     # Momentum: RSI y su pendiente
@@ -194,10 +203,10 @@ def crear_target(df_15m: pd.DataFrame,
         resultado = 0  # perdedora por defecto
 
         for j in range(i + 1, min(i + 1 + max_velas, n)):
-            if highs[j] >= precio_tp:
+            if closes[j] >= precio_tp:
                 resultado = 1  # tocó take profit → ganadora
                 break
-            if lows[j] <= precio_sl:
+            if closes[j] <= precio_sl:
                 resultado = 0  # tocó stop loss → perdedora
                 break
 

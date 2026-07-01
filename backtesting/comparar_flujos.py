@@ -11,7 +11,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 
 FEATURES = [
-    'close_vs_ema200', 'ema50_vs_ema200',
+    'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx', 'rsi_pendiente_vs_precio',

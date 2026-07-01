@@ -22,7 +22,7 @@ UMBRAL_PROB    = 0.63
 MAX_VELAS      = 96
 
 FEATURES = [
-    'close_vs_ema200', 'ema50_vs_ema200',
+    'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx', 'rsi_pendiente_vs_precio',
@@ -454,6 +454,7 @@ if __name__ == "__main__":
     ganador = "ML" if ret_ml > ret_c else "Clásico"
     print(f"\n  Estrategia ganadora: {ganador}")
 
+    print(ops_ml.tail())
     # Gráfico
     graficar_comparacion(equity_c, equity_ml, ops_c, ops_ml)
 

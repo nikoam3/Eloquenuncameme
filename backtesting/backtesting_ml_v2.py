@@ -70,7 +70,10 @@ def walk_forward_calibrado(features_df: pd.DataFrame,
         )
 
         retorno = (cap / CAPITAL_INICIAL - 1) * 100
-        n_ops   = len(ops[ops['ganancia_pct'].notna()])
+        if 'ganancia_pct' in ops.columns and not ops.empty:
+            n_ops = len(ops[ops['ganancia_pct'].notna()])
+        else:
+            n_ops = 0
         fecha_i = f_test.index[0].strftime('%m/%Y')
         fecha_f = f_test.index[-1].strftime('%m/%Y')
 
@@ -140,17 +143,8 @@ def barrer_umbrales(features_df: pd.DataFrame, df_15m: pd.DataFrame,
 if __name__ == "__main__":
     print("📊 Backtesting con modelo CALIBRADO (Isotonic)\n")
 
-    print("Cargando datos...")
-    df_15m = cargar_velas("ETHUSDT", "15m")
-    df_15m['MM']  = ta.ema(df_15m['Close'], length=200)
-    df_15m['RSI'] = ta.rsi(df_15m['Close'], length=14)
-    adx = ta.adx(df_15m['High'], df_15m['Low'],
-                 df_15m['Close'], length=14)
-    df_15m['ADX'] = adx['ADX_14']
-    df_15m = df_15m.dropna()
-
     print("Construyendo features ML...")
-    features_df, _ = construir_features("ETHUSDT")
+    features_df, df_15m = construir_features("SOLUSDT")
     target = crear_target(df_15m.loc[features_df.index],
                           stop_loss=STOP_LOSS,
                           take_profit=TAKE_PROFIT,
@@ -178,7 +172,7 @@ if __name__ == "__main__":
     print(f"{'='*55}")
 
     #umbrales_a_probar = [0.55, 0.60, 0.63, 0.65, 0.70, 0.75]
-    umbrales_a_probar = [0.75, 0.78, 0.80, 0.83, 0.85]
+    umbrales_a_probar = [0.60, 0.65, 0.70, 0.75, 0.80, 0.85]
     tabla = barrer_umbrales(features_df, df_15m, umbrales_a_probar)
 
     print(f"\n\n{'='*60}")
@@ -196,15 +190,3 @@ if __name__ == "__main__":
     print(f"  {'umbral 0.63':>8}: retorno +24.63%  ops: 853  "
           f"win rate: 77.0%  maxDD: -29.73%")
     
-"""
-PASO 1: Mismo umbral 0.63, pero con modelo calibrado
-  → Compara directamente contra tu resultado anterior
-    (+24.63%, 853 ops, 77% win rate)
-  → Esperamos MÁS operaciones (vimos 65% de señales vs 15%)
-    pero probablemente menor win rate
-
-PASO 2: Barrido de umbrales 0.55 a 0.75
-  → Busca si hay un umbral distinto que funcione mejor
-    ahora que las probabilidades significan otra cosa
-  → Con esto decidimos el umbral final para producción
-"""

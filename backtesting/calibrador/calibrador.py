@@ -21,7 +21,7 @@ UMBRAL_PROB     = 0.75
 N_VENTANAS      = 4
 
 FEATURES = [
-    'close_vs_ema200', 'ema50_vs_ema200',
+    'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx', 'rsi_pendiente_vs_precio',
@@ -308,18 +308,3 @@ if __name__ == "__main__":
 
     # 3. Gráfico
     graficar_calibracion(X, y, mejor)
-
-"""
-PASO 1: Diagnóstico
-├── Genera probabilidades out-of-sample (sin data leakage)
-├── Muestra el reliability diagram en texto
-└── Dice exactamente: "cuando el modelo dice 0.63, la realidad es X"
-
-PASO 2: Compara 3 opciones
-├── Sin calibrar (baseline)
-├── Platt Scaling (sigmoid) — mejor para LR
-└── Isotonic Regression — más flexible pero necesita datos
-    
-PASO 3: Gráfico visual
-└── Reliability diagram + distribución de probabilidades
-"""

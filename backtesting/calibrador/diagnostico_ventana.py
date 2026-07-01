@@ -19,7 +19,7 @@ ARCHIVO_DATASET = 'dataset_ml.parquet'
 N_VENTANAS      = 4
 
 FEATURES = [
-    'close_vs_ema200', 'ema50_vs_ema200',
+    'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx', 'rsi_pendiente_vs_precio',
@@ -211,19 +211,3 @@ if __name__ == "__main__":
               f"{c['adx_avg']:>10.1f} {c['atr_avg']:>10.4f}")
 
     graficar_resumen(caracteristicas)
-
-"""
-Hipótesis 1: Desbalance de clases distinto
-  → Si V1/V2 tienen % positivo muy distinto al resto,
-    el modelo entrenado "antes" no está calibrado para
-    esa nueva proporción
-
-Hipótesis 2: Drift de features (cambio de régimen)
-  → Si las medias de RSI, ADX, ATR en el test de V1/V2
-    son muy distintas a las del train, el modelo está
-    extrapolando fuera de lo que aprendió
-
-Hipótesis 3: Volatilidad/tendencia distinta
-  → Mercados laterales vs en tendencia tienen
-    comportamientos de probabilidad distintos
-"""
