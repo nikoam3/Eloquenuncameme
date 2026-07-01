@@ -12,7 +12,6 @@ from features import construir_features
 UMBRAL_PROB   = 0.75
 MODELO_PATH   = 'modelo_lr.joblib'
 SCALER_PATH   = 'scaler_lr.joblib'
-PAR           = "ETHUSDT"
 
 FEATURES = [
     'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
@@ -24,6 +23,15 @@ FEATURES = [
     'tendencia_1h', 'rsi_1h', 'adx_1h', 'roc_1h'
 ]
 
+PARES = [
+    "BTCUSDT",
+    "ETHUSDT", 
+    "BNBUSDT",
+    "SOLUSDT",
+    "XRPUSDT",
+    "ZECUSDT",
+    "PAXGUSDT"
+]
 
 # ============================================================
 # ENTRENAMIENTO Y GUARDADO DEL MODELO
@@ -84,7 +92,7 @@ def cargar_modelo():
 # ============================================================
 # PREDICCIÓN EN TIEMPO REAL
 # ============================================================
-def predecir(modelo, scaler, par: str = PAR, features_df: pd.DataFrame = None) -> dict:
+def predecir(modelo, scaler, features_df: pd.DataFrame = None) -> dict:
     """
     Calcula las features del momento actual y
     devuelve la probabilidad de que la próxima
@@ -95,6 +103,12 @@ def predecir(modelo, scaler, par: str = PAR, features_df: pd.DataFrame = None) -
         - operar:  True si supera el umbral
         - señales: valores actuales de las features clave
     """
+    if features_df is None or not isinstance(features_df, pd.DataFrame):
+        raise ValueError("No hay features válidas para predecir.")
+
+    if features_df.empty:
+        raise ValueError("El DataFrame de features está vacío.")
+
     # Reordenamos y alineamos exactamente como en entrenamiento
     ultima = features_df.reindex(columns=FEATURES).dropna().iloc[-1:]
 
@@ -127,9 +141,9 @@ def predecir(modelo, scaler, par: str = PAR, features_df: pd.DataFrame = None) -
 # ============================================================
 if __name__ == "__main__":
     entrenar_y_guardar()
-    features_df, _= construir_features(PAR, True)
-    resultado = predecir(*cargar_modelo(), features_df=features_df)
-    print(f"\nProbabilidad de operación ganadora: {resultado['prob']*100:.2f}%")
-    print("Señales clave:")
-    for clave, valor in resultado['señales'].items():
-        print(f"  {clave}: {valor}")
+    #features_df, _= construir_features('ETHUSDT', True)
+    #resultado = predecir(*cargar_modelo(), features_df=features_df)
+    #print(f"\nProbabilidad de operación ganadora: {resultado['prob']*100:.2f}%")
+    #print("Señales clave:")
+    #for clave, valor in resultado['señales'].items():
+    #   print(f"  {clave}: {valor}")

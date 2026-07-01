@@ -34,7 +34,7 @@ N_VENTANAS      = 4
 UMBRALES_PROBAR = [0.70, 0.75, 0.80, 0.85]
 
 FEATURES = [
-    'close_vs_ema200', 'ema50_vs_ema200',
+    'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx',

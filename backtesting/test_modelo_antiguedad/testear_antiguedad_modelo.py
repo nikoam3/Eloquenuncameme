@@ -22,7 +22,7 @@ MESES_EVALUACION = 3
 MESES_ENTRENAMIENTO_A_PROBAR = [3, 6, 9, 12, 15, 18, 21, 24]
 
 FEATURES = [
-    'close_vs_ema200', 'ema50_vs_ema200',
+    'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx',
