@@ -112,7 +112,12 @@ def evaluar_compra(decimal_price: int,
     if modelo_ml is None or scaler_ml is None:
         return  # sin modelo no operamos
 
-    prediccion = predecir(modelo_ml, scaler_ml, features)
+    try:
+        prediccion = predecir(modelo_ml, scaler_ml, features)
+    except Exception as e:
+        print(f"  ⚠️ No se pudo calcular la señal ML para compra: {e}")
+        return
+
     prob = prediccion['prob']
 
     print(f"  🧠 ML: prob={prob} | "
@@ -197,7 +202,12 @@ def evaluar_venta_ml(decimal_price: int,
     if modelo_ml is None or scaler_ml is None:
         return
 
-    prediccion = predecir(modelo_ml, scaler_ml, features)
+    try:
+        prediccion = predecir(modelo_ml, scaler_ml, features)
+    except Exception as e:
+        print(f"  ⚠️ No se pudo calcular la señal ML para venta: {e}")
+        return
+
     prob = prediccion['prob']
     
     print(f"  🧠 ML: prob={prob} | "
