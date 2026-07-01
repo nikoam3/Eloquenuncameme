@@ -79,7 +79,7 @@ def main():
         estado = get_estado()
         try:
             # 1. Obtenemos datos con indicadores
-            features, data = construir_features()
+            features, data = construir_features('ETHUSDT')
 
             # 2. Evaluamos señales en orden de prioridad
             evaluar_stop_loss(data, decimal_price, decimal_quantity)
