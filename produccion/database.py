@@ -12,10 +12,12 @@ PARES = [
     "ETHUSDT", 
     "BNBUSDT",
     "SOLUSDT",
-    "GALAUSDT"
+    "XRPUSDT",
+    "ZECUSDT",
+    "PAXGUSDT"
 ]
 
-INTERVALOS = ["5m", "15m", "1h"]
+INTERVALOS = ["5m", "15m", "1h", "4h"]
 
 
 def get_connection():

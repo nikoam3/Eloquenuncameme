@@ -9,13 +9,13 @@ from features import construir_features
 # ============================================================
 # CONFIGURACIÓN
 # ============================================================
-UMBRAL_PROB   = 0.7
+UMBRAL_PROB   = 0.75
 MODELO_PATH   = 'modelo_lr.joblib'
 SCALER_PATH   = 'scaler_lr.joblib'
 PAR           = "ETHUSDT"
 
 FEATURES = [
-    'close_vs_ema200', 'ema50_vs_ema200',
+    'close_vs_ema200', 'ema50_vs_ema200', 'ema9_vs_ema26',
     'rsi',
     'atr_relativo', 'atr_tendencia', 'bb_ancho',
     'adx', 'rsi_pendiente_vs_precio',
@@ -84,7 +84,7 @@ def cargar_modelo():
 # ============================================================
 # PREDICCIÓN EN TIEMPO REAL
 # ============================================================
-def predecir(modelo, scaler, features_df: pd.DataFrame = None) -> dict:
+def predecir(modelo, scaler, par: str = PAR, features_df: pd.DataFrame = None) -> dict:
     """
     Calcula las features del momento actual y
     devuelve la probabilidad de que la próxima
@@ -113,6 +113,7 @@ def predecir(modelo, scaler, features_df: pd.DataFrame = None) -> dict:
         'tendencia_1h':  int(ultima['tendencia_1h'].iloc[0]),
         'atr_relativo':  round(float(ultima['atr_relativo'].iloc[0]), 4),
         'close_vs_ema200': round(float(ultima['close_vs_ema200'].iloc[0]), 4),
+        'ema9_vs_ema26':   round(float(ultima['ema9_vs_ema26'].iloc[0]), 4),
     }
 
     return {
@@ -126,8 +127,8 @@ def predecir(modelo, scaler, features_df: pd.DataFrame = None) -> dict:
 # ============================================================
 if __name__ == "__main__":
     entrenar_y_guardar()
-    features_df, _ = construir_features(PAR)
-    resultado = predecir(*cargar_modelo(), features_df)
+    features_df, _= construir_features(PAR, True)
+    resultado = predecir(*cargar_modelo(), features_df=features_df)
     print(f"\nProbabilidad de operación ganadora: {resultado['prob']*100:.2f}%")
     print("Señales clave:")
     for clave, valor in resultado['señales'].items():
